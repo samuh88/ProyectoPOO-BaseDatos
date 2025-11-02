@@ -1,9 +1,7 @@
-package org.example.Produccion;
-
-
+package org.example.SubsistemaComercial;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DeProRepository extends JpaRepository<DesarrolladorProducto, Long> {
+public interface CarritoRepository extends JpaRepository<Carrito, Integer>{
 }

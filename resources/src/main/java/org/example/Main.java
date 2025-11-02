@@ -3,10 +3,13 @@ package org.example;
 import org.example.GestionContenido.UsuarioService;
 import org.example.Produccion.DeProService;
 import org.example.Produccion.DesarrolladorProducto;
-import org.example.SubsistemaComercial.Categoria;
-import org.example.SubsistemaComercial.Cliente;
-import org.example.SubsistemaComercial.Producto;
+import org.example.Produccion.Fabrica;
+import org.example.Produccion.FabricaService;
+import org.example.SubsistemaComercial.*;
 import org.example.GestionContenido.Usuario;
+import org.example.SubsistemaComercial.Carrito;
+import org.example.SubsistemaComercial.CarritoService;
+
 
 
 import javax.swing.*;
@@ -14,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import org.example.SubsistemaComercial.ProductoService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +29,10 @@ public class Main {
     private static ArrayList<Usuario> usuarios = new ArrayList<>();
     private static ArrayList<Producto> productos = new ArrayList<>();
     private static Usuario usuarioActivo = null;
+    private DeProService deProService;
+    private CarritoService carritoService;
+    private FabricaService fabricaService;
+    //private DesarrolladorProducto desarrolladorProducto;
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
@@ -133,7 +139,8 @@ public class Main {
     }
 
     @Bean
-    public CommandLineRunner run(ProductoService productoService, UsuarioService usuarioService, DesarrolladorProducto desarrolladorProducto) {
+    public CommandLineRunner run(ProductoService productoService, UsuarioService usuarioService,
+                                 DesarrolladorProducto desarrolladorProducto, Carrito carrito, Fabrica fabrica) {
         return args -> {
 
             // PRODUCTO CON CATEGORIA
@@ -213,6 +220,15 @@ public class Main {
             usuarioService.saveUser(nuevoUsuario);
             System.out.println("Usuario agregado: " + nuevoUsuario);
 
+            //Cliente agregado
+            Cliente nuevoCliente = new Cliente(
+                    "Sofia ", "sofiiiz@gmail.com ", "Cliente ", "Activo", 0, 5678,
+                    "Calle 45 #10-30", " Efectivo"
+            );
+
+            usuarioService.saveUser(nuevoCliente);
+            System.out.println(" Cliente agregado "+ nuevoCliente);
+
             System.out.println("Traer usuario por id");
             Integer id_a_consultar_usuario = 1;
             usuarioService.getUserById(id_a_consultar_usuario).ifPresentOrElse(
@@ -246,58 +262,156 @@ public class Main {
             System.out.println("Usuarios finales en la base de datos:");
             usuarioService.getAllUsers().forEach(System.out::println);
 
+
+
+            // Desarrollador Producto
+
+            System.out.println("=== Listado de Desarrolladores de producto ===");
+            List<DesarrolladorProducto> desarrolladorProductos = deProService.getAllDePro();
+            desarrolladorProductos.forEach(System.out::println);
+
+            DesarrolladorProducto nuevoDesarrollador = new DesarrolladorProducto(
+                    "Juguetes"
+            );
+            deProService.saveDePro(nuevoDesarrollador);
+            System.out.println("Desarrollador de producto agregado: " + nuevoDesarrollador);
+
+            System.out.println("Traer desarrollador por id");
+            Integer id_a_consultar_desarrollador = 1;
+            deProService.getDeProById(id_a_consultar_usuario).ifPresentOrElse(
+                    System.out::println,
+                    () -> System.out.println("No se encontró el desarrollador")
+            );
+
+            DesarrolladorProducto informacionParaActualizarDesarrollador = new DesarrolladorProducto(
+                    "Cajas"
+            );
+            DesarrolladorProducto informacionYaActualizadaDesarrollador =
+                    deProService.updateDeProInfo(id_a_consultar_desarrollador, informacionParaActualizarDesarrollador);
+
+            if (informacionYaActualizadaUsuario != null) {
+                System.out.println("Desarrollador actualizado: " + informacionYaActualizadaDesarrollador);
+            } else {
+                System.out.println("No se pudo actualizar el desarrollador con id " + id_a_consultar_desarrollador);
+            }
+
+            System.out.println("Eliminar el desarrollador con id 2");
+            Integer id_a_eliminar_desarrollador = 2;
+            boolean resultadoDesarrollador = deProService.deleteDeProInfo(id_a_eliminar_desarrollador);
+
+            if (resultadoDesarrollador) {
+                System.out.println("Se ha eliminado el desarrollador correctamente.");
+            } else {
+                System.out.println("No se pudo eliminar el desarrollador.");
+
+            }
+
+            System.out.println("Desarrollador finales en la base de datos:");
+            deProService.getAllDePro().forEach(System.out::println);
+
+            // CARRITO
+
+            System.out.println("=== Listado de Carritos ===");
+            List<Carrito> carritos = carritoService.getAllCarts();
+            carritos.forEach(System.out::println);
+
+            Carrito nuevoCarrito = new Carrito(
+                    12, "19/01/2025"
+            );
+            carritoService.saveCarrito(nuevoCarrito);
+            System.out.println("Carrito agregado: " + nuevoCarrito);
+
+            System.out.println("Traer carrito por id");
+            Integer id_a_consultar_carrito = 1;
+            carritoService.getCarritoById(id_a_consultar_carrito).ifPresentOrElse(
+                    System.out::println,
+                    () -> System.out.println("No se encontró el carrito")
+            );
+
+            Carrito informacionParaActualizarCarrito = new Carrito(
+                    22, "31/10/2025"
+            );
+            Carrito informacionYaActualizadaCarrito =
+                    carritoService.updateCarritoInfo(id_a_consultar_carrito, informacionParaActualizarCarrito);
+
+            if (informacionYaActualizadaCarrito != null) {
+                System.out.println("Carrito actualizado: " + informacionYaActualizadaCarrito);
+            } else {
+                System.out.println("No se pudo actualizar el carrito con id " + id_a_consultar_carrito);
+            }
+
+            System.out.println("Eliminar el carrito con id 2");
+            Integer id_a_eliminar_carrito = 2;
+            boolean resultadoCarrito = carritoService.deleteCartInfo(id_a_eliminar_carrito);
+
+            if (resultadoCarrito) {
+                System.out.println("Se ha eliminado el carrito correctamente.");
+            } else {
+                System.out.println("No se pudo eliminar el carrito.");
+
+            }
+
+            System.out.println("Carrito finales en la base de datos:");
+            carritoService.getAllCarts().forEach(System.out::println);
+
+            // FABRICA
+
+            System.out.println("=== Listado de Fabricas ===");
+            List<Fabrica> fabricas = fabricaService.getAllFabric();
+            fabricas.forEach(System.out::println);
+
+            Fabrica nuevaFabrica = new Fabrica(
+                    2, 25, 3, "Paises Bajos", "La Haya "
+            );
+            fabricaService.saveFabrica(nuevaFabrica);
+            System.out.println("Fabrica agregada: " + nuevaFabrica);
+
+            System.out.println("Traer fabrica por id");
+            Integer id_a_consultar_fabrica = 2;
+            fabricaService.getFabricaById(id_a_consultar_fabrica).ifPresentOrElse(
+                    System.out::println,
+                    () -> System.out.println("No se encontró la fabrica")
+            );
+
+            Fabrica informacionParaActualizarFabrica = new Fabrica(
+                    3, 30, 2, "Paises Bajos", "Assen "
+            );
+            Fabrica informacionYaActualizadaFabrica =
+                    fabricaService.updateFabricaInfo(id_a_consultar_fabrica, informacionParaActualizarFabrica);
+
+            if (informacionYaActualizadaCarrito != null) {
+                System.out.println("Fabrica actualizada: " + informacionYaActualizadaFabrica);
+            } else {
+                System.out.println("No se pudo actualizar el carrito con id " + id_a_consultar_fabrica);
+            }
+
+            System.out.println("Eliminar la fabrica con id 3");
+            Integer id_a_eliminar_fabrica = 3;
+            boolean resultadoFabrica = fabricaService.deleteFabricInfo(id_a_eliminar_fabrica);
+
+            if (resultadoFabrica) {
+                System.out.println("Se ha eliminado la fabrica correctamente.");
+            } else {
+                System.out.println("No se pudo eliminar la fabrica.");
+
+            }
+
+            System.out.println("Fabrica finales en la base de datos:");
+            fabricaService.getAllFabric().forEach(System.out::println);
+
+
+
+
+
         };
 
-        // Desarrollador Producto
-
-        System.out.println("=== Listado de Desarrolladores de producto ===");            List<Usuario> usuarios = usuarioService.getAllUsers();
-        List<DesarrolladorProducto> desarrolladorProductos = ;
-        usuarios.forEach(System.out::println);
-
-        DesarrolladorProducto nuevoDesarrollador = new DesarrolladorProducto(
-                "Juguetes"
-        );
-        usuarioService.saveUser(nuevoUsuario);
-        System.out.println("Usuario agregado: " + nuevoUsuario);
-
-        System.out.println("Traer usuario por id");
-        Integer id_a_consultar_usuario = 1;
-        usuarioService.getUserById(id_a_consultar_usuario).ifPresentOrElse(
-                System.out::println,
-                () -> System.out.println("No se encontró el usuario")
-        );
-
-        Usuario informacionParaActualizarUsuario = new Usuario(
-                0, "Esteban", "estebananote@gmail.com", "Comprador VIP", "Cerrado", 4545
-        );
-        Usuario informacionYaActualizadaUsuario =
-                usuarioService.updateUserInfo(id_a_consultar_usuario, informacionParaActualizarUsuario);
-
-        if (informacionYaActualizadaUsuario != null) {
-            System.out.println("Usuario actualizado: " + informacionYaActualizadaUsuario);
-        } else {
-            System.out.println("No se pudo actualizar el usuario con id " + id_a_consultar_usuario);
-        }
-
-        System.out.println("Eliminar el usuario con id 2");
-        Integer id_a_eliminar_usuario = 2;
-        boolean resultadoUsuario = usuarioService.deleteUserInfo(id_a_eliminar_usuario);
-
-        if (resultadoUsuario) {
-            System.out.println("Se ha eliminado el usuario correctamente.");
-        } else {
-            System.out.println("No se pudo eliminar el usuario.");
-
-        }
-
-        System.out.println("Usuarios finales en la base de datos:");
-        usuarioService.getAllUsers().forEach(System.out::println);
-
-    };
 
 
-    };
+    }
+
 
 }
+
+
 
 

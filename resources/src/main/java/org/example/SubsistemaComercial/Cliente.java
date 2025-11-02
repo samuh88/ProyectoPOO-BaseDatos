@@ -1,6 +1,15 @@
 package org.example.SubsistemaComercial;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.GestionContenido.Usuario;
+
+@Entity
+@Data
+@NoArgsConstructor
+@DiscriminatorValue("CLIENTE")
 
 public class Cliente extends Usuario {
     private String direccionEnvio, metodosDePago;
