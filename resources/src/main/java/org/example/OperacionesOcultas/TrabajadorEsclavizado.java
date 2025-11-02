@@ -29,4 +29,60 @@ public class TrabajadorEsclavizado {
         this.salud = salud;
         this.asignadoA = asignadoA;
     }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public void setAsignadoA(String asignadoA) {
+        this.asignadoA = asignadoA;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+
+    public void setFechaCaptura(String fechaCaptura) {
+        this.fechaCaptura = fechaCaptura;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setPaisOrigen(String paisOrigen) {
+        this.paisOrigen = paisOrigen;
+    }
+
+    public void setSalud(String salud) {
+        this.salud = salud;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public String getAsignadoA() {
+        return asignadoA;
+    }
+
+    public String getFechaCaptura() {
+        return fechaCaptura;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getPaisOrigen() {
+        return paisOrigen;
+    }
+
+    public String getSalud() {
+        return salud;
+    }
 }

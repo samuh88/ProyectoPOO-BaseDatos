@@ -1,6 +1,8 @@
 package org.example;
 
 import org.example.GestionContenido.*;
+import org.example.OperacionesOcultas.TraEsclavizadoService;
+import org.example.OperacionesOcultas.TrabajadorEsclavizado;
 import org.example.Produccion.DeProService;
 import org.example.Produccion.DesarrolladorProducto;
 import org.example.Produccion.Fabrica;
@@ -34,6 +36,7 @@ public class Main {
     private CompraService compraService;
     private LineaCompraService lineaCompraService;
     private LineaCarritoService lineaCarritoService;
+    private TraEsclavizadoService traEsclavizadoService;
     //private DesarrolladorProducto desarrolladorProducto;
 
     public static void main(String[] args) {
@@ -563,6 +566,53 @@ public class Main {
 
             System.out.println("Lineas carritos finales en la base de datos:");
             lineaCarritoService.getAllCartsLine().forEach(System.out::println);
+
+            //TRABAJADOR ESCLAVIZADO
+
+            System.out.println("=== Listado de Trabajadores Esclavizados ===");
+            List<TrabajadorEsclavizado> trabajadorEsclavizados = traEsclavizadoService.getAllWorkers();
+            trabajadorEsclavizados.forEach(System.out::println);
+
+            TrabajadorEsclavizado nuevoTrabajadorEsclavizado = new TrabajadorEsclavizado(
+                    0, 20, "Amari ", "Africa ", "2/10/2025", "Estable", "Dueña"
+            );
+            traEsclavizadoService.saveWorker(nuevoTrabajadorEsclavizado);
+            System.out.println("Trabajador esclavizado agregado: " + nuevoTrabajadorEsclavizado);
+
+            System.out.println("Traer Trabajador por id");
+            Integer id_a_consultar_trabajador = 4;
+            traEsclavizadoService.getWorkerById(id_a_consultar_trabajador).ifPresentOrElse(
+                    System.out::println,
+                    () -> System.out.println("No se encontró el trabajador esclavizado")
+            );
+
+            TrabajadorEsclavizado informacionParaActualizarTrabajador = new TrabajadorEsclavizado(
+                    5, 40, "Eutaki ", "Africa ", "2/10/2010", "Enfermo",
+                    "Administradores"
+            );
+            TrabajadorEsclavizado informacionYaActualizadaTrabajador =
+                    traEsclavizadoService.updateWorkerInfo(id_a_consultar_trabajador, informacionParaActualizarTrabajador);
+
+            if (informacionYaActualizadaTrabajador != null) {
+                System.out.println("Trabajador actualizado: " + informacionYaActualizadaTrabajador);
+            } else {
+                System.out.println("No se pudo actualizar el trabajador con id " + id_a_consultar_trabajador);
+            }
+
+            System.out.println("Eliminar el trabajador con id 3");
+            Integer id_a_eliminar_trabajador = 5;
+            boolean resultadoTrabajador = traEsclavizadoService.deleteWorkerInfo(id_a_eliminar_trabajador);
+
+            if (resultadoTrabajador) {
+                System.out.println("Se ha eliminado el trabajador correctamente.");
+            } else {
+                System.out.println("No se pudo eliminar el trabajador.");
+
+            }
+
+            System.out.println("Trabajadores finales en la base de datos:");
+            traEsclavizadoService.getAllWorkers().forEach(System.out::println);
+
 
 
 

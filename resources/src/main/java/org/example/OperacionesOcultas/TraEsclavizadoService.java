@@ -1,6 +1,4 @@
 package org.example.OperacionesOcultas;
-import org.example.GestionContenido.Usuario;
-import org.example.GestionContenido.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,37 +9,39 @@ import java.util.Optional;
 public class TraEsclavizadoService {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private TraEsclavizadoRepository traEsclavizadoRepository;
 
-    public List<Usuario> getAllUsers() {
-        return usuarioRepository.findAll();
+    public List<TrabajadorEsclavizado> getAllWorkers() {
+        return traEsclavizadoRepository.findAll();
     }
 
-    public Usuario saveUser(Usuario usuario){
-        return usuarioRepository.save(usuario);
+    public TrabajadorEsclavizado saveWorker(TrabajadorEsclavizado trabajadorEsclavizado){
+        return traEsclavizadoRepository.save(trabajadorEsclavizado);
     }
 
-    public Optional<Usuario> getUserById(Integer Id){
-        return usuarioRepository.findById(Id);
+    public Optional<TrabajadorEsclavizado> getWorkerById(Integer Id){
+        return traEsclavizadoRepository.findById(Id);
     }
 
 
-    public Usuario updateUserInfo(Integer Id, Usuario nuevaInfoUsuario){
-        return usuarioRepository.findById(Id).map(
-                usuario ->{
-                    usuario.setID(nuevaInfoUsuario.getID());
-                    usuario.setNombre(nuevaInfoUsuario.getNombre());
-                    usuario.setEmail(nuevaInfoUsuario.getEmail());
-                    usuario.setRol(nuevaInfoUsuario.getRol());
-                    return usuarioRepository.save(usuario);
+    public TrabajadorEsclavizado updateWorkerInfo(Integer Id, TrabajadorEsclavizado nuevaInfoTrabajador){
+        return traEsclavizadoRepository.findById(Id).map(
+                trabajadorEsclavizado ->{
+                    trabajadorEsclavizado.setEdad(nuevaInfoTrabajador.getEdad());
+                    trabajadorEsclavizado.setPaisOrigen(nuevaInfoTrabajador.getPaisOrigen());
+                    trabajadorEsclavizado.setNombre(nuevaInfoTrabajador.getNombre());
+                    trabajadorEsclavizado.setSalud(nuevaInfoTrabajador.getSalud());
+                    trabajadorEsclavizado.setAsignadoA(nuevaInfoTrabajador.getAsignadoA());
+                    trabajadorEsclavizado.setFechaCaptura(nuevaInfoTrabajador.getFechaCaptura());
+                    return traEsclavizadoRepository.save(trabajadorEsclavizado);
                 }
         ).orElse(null);
     }
 
 
-    public boolean deleteUserInfo (Integer Id){
-        if(usuarioRepository.existsById(Id)){
-            usuarioRepository.deleteById(Id);
+    public boolean deleteWorkerInfo(Integer Id){
+        if(traEsclavizadoRepository.existsById(Id)){
+            traEsclavizadoRepository.deleteById(Id);
             return true;
         }else{
             return false;
