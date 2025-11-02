@@ -1,12 +1,11 @@
 package org.example;
 
-import org.example.GestionContenido.UsuarioService;
+import org.example.GestionContenido.*;
 import org.example.Produccion.DeProService;
 import org.example.Produccion.DesarrolladorProducto;
 import org.example.Produccion.Fabrica;
 import org.example.Produccion.FabricaService;
 import org.example.SubsistemaComercial.*;
-import org.example.GestionContenido.Usuario;
 import org.example.SubsistemaComercial.Carrito;
 import org.example.SubsistemaComercial.CarritoService;
 
@@ -32,6 +31,9 @@ public class Main {
     private DeProService deProService;
     private CarritoService carritoService;
     private FabricaService fabricaService;
+    private CompraService compraService;
+    private LineaCompraService lineaCompraService;
+    private LineaCarritoService lineaCarritoService;
     //private DesarrolladorProducto desarrolladorProducto;
 
     public static void main(String[] args) {
@@ -42,7 +44,7 @@ public class Main {
         int opcion;
         do {
             if (usuarioActivo == null) {
-                
+
                 String menu = """
                         1. Registrar usuario
                         2. Iniciar sesión
@@ -57,7 +59,7 @@ public class Main {
                     default -> JOptionPane.showMessageDialog(null, "Opción inválida");
                 }
             } else {
-                
+
                 String menuUsuario = """
                         1. Agregar producto
                         2. Listar productos
@@ -219,6 +221,33 @@ public class Main {
             );
             usuarioService.saveUser(nuevoUsuario);
             System.out.println("Usuario agregado: " + nuevoUsuario);
+
+            //Dueña
+            Dueña nuevaDueña = new Dueña(
+                    "Benedicto ", "ElBeneDictoSHHHH@gmail.com ", "Dueña ", "Oculto", 0, 6666,
+                    1245, "2/10/2025"
+            );
+
+            usuarioService.saveUser(nuevaDueña);
+            System.out.println(" Dueña agregada "+ nuevaDueña);
+
+            //AdministadorUsuario
+            AdministradorUsuario nuevoAdministadorUsuario = new AdministradorUsuario(
+                    "Pepe ", "pepeeeee@gmail.com ", "Administrador ", "Activo", 0, 8864,
+                    5
+            );
+
+            usuarioService.saveUser(nuevoAdministadorUsuario);
+            System.out.println(" Administrador de usuario agregado " + nuevoAdministadorUsuario);
+
+            //AdministradorContenido
+            AdministradorContenido nuevoAdministradorContenido = new AdministradorContenido(
+                    "Raul ", "rawwwwl@gmail.com ", "Administrador ", "Activo", 0, 6647,
+                    "Todos"
+            );
+
+            usuarioService.saveUser(nuevoAdministradorContenido);
+            System.out.println(" Administrador de contenido agregado " + nuevoAdministradorContenido);
 
             //Cliente agregado
             Cliente nuevoCliente = new Cliente(
@@ -398,6 +427,144 @@ public class Main {
 
             System.out.println("Fabrica finales en la base de datos:");
             fabricaService.getAllFabric().forEach(System.out::println);
+
+
+            //COMPRA
+
+            System.out.println("=== Listado de Compras ===");
+            List<Compra> compras = compraService.getAllSales();
+            compras.forEach(System.out::println);
+
+            Compra nuevaCompra = new Compra(
+                    0, "30/07/2025", 300
+            );
+            compraService.saveSales(nuevaCompra);
+            System.out.println("Compra agregada: " + nuevaCompra);
+
+            System.out.println("Traer compra por id");
+            Integer id_a_consultar_compra = 2;
+            compraService.getSaleById(id_a_consultar_compra).ifPresentOrElse(
+                    System.out::println,
+                    () -> System.out.println("No se encontró la fabrica")
+            );
+
+            Compra informacionParaActualizarCompra = new Compra(
+                    3, "5/08/2025", 500
+            );
+            Compra informacionYaActualizadaCompra =
+                    compraService.updateSalesInfo(id_a_consultar_compra, informacionParaActualizarCompra);
+
+            if (informacionYaActualizadaCompra != null) {
+                System.out.println("Compra actualizada: " + informacionYaActualizadaCompra);
+            } else {
+                System.out.println("No se pudo actualizar la compra con id " + id_a_consultar_compra);
+            }
+
+            System.out.println("Eliminar la compra con id 3");
+            Integer id_a_eliminar_compra = 3;
+            boolean resultadoCompra = compraService.deleteSalesInfo(id_a_eliminar_compra);
+
+            if (resultadoCompra) {
+                System.out.println("Se ha eliminado la compra correctamente.");
+            } else {
+                System.out.println("No se pudo eliminar la compra.");
+
+            }
+
+            System.out.println("Compras finales en la base de datos:");
+            compraService.getAllSales().forEach(System.out::println);
+
+            //Linea Compra
+
+            System.out.println("=== Listado de Lineas de Compra ===");
+            List<LineaCompra> lineaCompras = lineaCompraService.getAllSalesLine();
+            lineaCompras.forEach(System.out::println);
+
+            LineaCompra nuevaLineaCompra = new LineaCompra(
+                    10, 300
+            );
+            lineaCompraService.saveSalesLine(nuevaLineaCompra);
+            System.out.println("Linea Compra agregada: " + nuevaLineaCompra);
+
+            System.out.println("Traer Linea compra por id");
+            Integer id_a_consultar_linea_compra = 2;
+            lineaCompraService.getSaleLineById(id_a_consultar_linea_compra).ifPresentOrElse(
+                    System.out::println,
+                    () -> System.out.println("No se encontró la linea compra")
+            );
+
+            LineaCompra informacionParaActualizarLineaCompra = new LineaCompra(
+                    50, 800
+            );
+            LineaCompra informacionYaActualizadaLineaCompra =
+                    lineaCompraService.updateSalesLineInfo(id_a_consultar_linea_compra, informacionParaActualizarLineaCompra);
+
+            if (informacionYaActualizadaLineaCompra != null) {
+                System.out.println("Linea actualizada: " + informacionYaActualizadaLineaCompra);
+            } else {
+                System.out.println("No se pudo actualizar la linea compra con id " + id_a_consultar_linea_compra);
+            }
+
+            System.out.println("Eliminar la linea compra con id 3");
+            Integer id_a_eliminar_linea_compra = 3;
+            boolean resultadoLineaCompra = lineaCompraService.deleteSalesLineInfo(id_a_eliminar_linea_compra);
+
+            if (resultadoLineaCompra) {
+                System.out.println("Se ha eliminado la linea compra correctamente.");
+            } else {
+                System.out.println("No se pudo eliminar la linea compra.");
+
+            }
+
+            System.out.println("Lineas compras finales en la base de datos:");
+            lineaCompraService.getAllSalesLine().forEach(System.out::println);
+
+            //Linea Carrito
+
+            System.out.println("=== Listado de Lineas de carrito ===");
+            List<LineaCarrito> lineaCarritos = lineaCarritoService.getAllCartsLine();
+            lineaCarritos.forEach(System.out::println);
+
+            LineaCarrito nuevaLineaCarrito = new LineaCarrito(
+                    15, 350
+            );
+            lineaCarritoService.saveCartsLine(nuevaLineaCarrito);
+            System.out.println("Linea Carrito agregada: " + nuevaLineaCarrito);
+
+            System.out.println("Traer Linea carrito por id");
+            Integer id_a_consultar_linea_carrito = 1;
+            lineaCarritoService.getCartLineById(id_a_consultar_linea_carrito).ifPresentOrElse(
+                    System.out::println,
+                    () -> System.out.println("No se encontró la linea carrito")
+            );
+
+            LineaCarrito informacionParaActualizarLineaCarrito = new LineaCarrito(
+                    55, 850
+            );
+            LineaCarrito informacionYaActualizadaLineaCarrito =
+                    lineaCarritoService.updateCartsLineInfo(id_a_consultar_linea_compra, informacionParaActualizarLineaCarrito);
+
+            if (informacionYaActualizadaLineaCarrito != null) {
+                System.out.println("Linea actualizada: " + informacionYaActualizadaLineaCarrito);
+            } else {
+                System.out.println("No se pudo actualizar la linea carrito con id " + id_a_consultar_linea_carrito);
+            }
+
+            System.out.println("Eliminar la linea carrito con id 3");
+            Integer id_a_eliminar_linea_carrito = 3;
+            boolean resultadoLineaCarrito = lineaCarritoService.deleteCartLineInfo(id_a_eliminar_linea_carrito);
+
+            if (resultadoLineaCarrito) {
+                System.out.println("Se ha eliminado la linea carrito correctamente.");
+            } else {
+                System.out.println("No se pudo eliminar la linea carrito.");
+
+            }
+
+            System.out.println("Lineas carritos finales en la base de datos:");
+            lineaCarritoService.getAllCartsLine().forEach(System.out::println);
+
+
 
 
 
