@@ -1,6 +1,17 @@
 package org.example.Produccion;
 
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "Fabrica")
+@Data
+@NoArgsConstructor
+
 public class Fabrica {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id, capacidad, nivelAutomatizacion;
     private String pais, ciudad;
 
